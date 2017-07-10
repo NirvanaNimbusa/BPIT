@@ -17,19 +17,23 @@ function populateTable() {
     // Empty content string
     var tableContent = '';
     // jQuery AJAX call for JSON
-    $.getJSON( '/users/userlist', function( data ) {
+    $.getJSON( '/users/accountList', function( data ) {
         userListData = data;
         // For each item in our JSON, add a table row and cells to the content string
         $.each(data, function(){
             tableContent += '<tr>';
-            tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.username + '">' + this.username + '</a></td>';
-            tableContent += '<td>' + this.email + '</td>';
+            tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.firstName + '">' + this.firstName + '</a></td>';
+            tableContent += '<td>' + this.lastName + '</td>';
+            tableContent += '<td>' + this.Stock1 + '</td>';
+            tableContent += '<td>' + this.quantity1 + '</td>';
+            tableContent += '<td>' + this.Stock2 + '</td>';
+            tableContent += '<td>' + this.quantity2 + '</td>';
             tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a></td>';
             tableContent += '</tr>';
         });
 
         // Inject the whole content string into our existing HTML table
-        $('#userList table tbody').html(tableContent);
+        $('#accountList table tbody').html(tableContent);
     });
 };
 
@@ -43,25 +47,25 @@ function showUserInfo(event) {
     var thisUserName = $(this).attr('rel');
 
     // Get Index of object based on id value
-    var arrayPosition = userListData.map(function(arrayItem) { return arrayItem.username; }).indexOf(thisUserName);
+    var arrayPosition = userListData.map(function(arrayItem) { return arrayItem.firstName; }).indexOf(thisUserName);
 
     // Get our User Object
     var thisUserObject = userListData[arrayPosition];
 
     //Populate Info Box
-    $('#userInfoName').text(thisUserObject.fullname);
-    $('#userInfoAge').text(thisUserObject.age);
-    $('#userInfoGender').text(thisUserObject.gender);
-    $('#userInfoLocation').text(thisUserObject.location);
+    $('#firstName').text(thisUserObject.firstName);
+    $('#lastName').text(thisUserObject.lastName);
+    $('#Stock1').text(thisUserObject.Stock1);
+    $('#Stock2').text(thisUserObject.Stock2);
 
 };
 
-function addUser(event) {
+function addAccount(event) {
     event.preventDefault();
 
     // Super basic validation - increase errorCount variable if any fields are blank
     var errorCount = 0;
-    $('#addUser input').each(function(index, val) {
+    $('#addAccount input').each(function(index, val) {
         if($(this).val() === '') { errorCount++; }
     });
 
@@ -70,27 +74,32 @@ function addUser(event) {
 
         // If it is, compile all user info into one object
         var newUser = {
-            'username': $('#addUser fieldset input#inputUserName').val(),
-            'email': $('#addUser fieldset input#inputUserEmail').val(),
-            'fullname': $('#addUser fieldset input#inputUserFullname').val(),
-            'age': $('#addUser fieldset input#inputUserAge').val(),
-            'location': $('#addUser fieldset input#inputUserLocation').val(),
-            'gender': $('#addUser fieldset input#inputUserGender').val()
+            'firstName': $('#addAccount fieldset input#firstName').val(),
+            'lastName': $('#addAccount fieldset input#lastName').val(),
+            'Stock1': $('#addAccount fieldset input#Stock1').val(),
+            'quantity1': $('#addAccount fieldset input#quantity1').val(),
+            'Stock2': $('#addAccount fieldset input#Stock2').val(),
+            'quantity2': $('#addAccount fieldset input#quantity2').val()
         }
+
+        //_______________________CHAIN CODE______________________________
+
+
+
+        //________________________________________________________________
 
         // Use AJAX to post the object to our adduser service
         $.ajax({
             type: 'POST',
             data: newUser,
-            url: '/users/adduser',
+            url: '/users/addAccount',
             dataType: 'JSON'
         }).done(function( response ) {
 
             // Check for successful (blank) response
             if (response.msg === '') {
-
                 // Clear the form inputs
-                $('#addUser fieldset input').val('');
+                $('#addAccount fieldset input').val('');
 
                 // Update the table
                 populateTable();
@@ -148,6 +157,6 @@ function deleteUser(event) {
 
 };
 // Username link click
-$('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
-$('#btnAddUser').on('click', addUser);
- $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+$('#accountList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
+$('#btnAddAccount').on('click', addAccount);
+ $('#accountList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);

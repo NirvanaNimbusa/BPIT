@@ -8,47 +8,51 @@ block content
     #wrapper
 
         // USER INFO
-        #userInfo
-            h2 User Info
+        #accountInfo
+            h2 Account Info
             p
                 strong Name:
-                |  <span id='userInfoName'></span>
+                |  <span id='firstName'></span>
+                |  <span id='lastName'></span>
                 br
-                strong Age:
-                |  <span id='userInfoAge'></span>
+                strong Stock 1:
+                |  <span id='Stock1'></span>
                 br
-                strong Gender:
-                |  <span id='userInfoGender'></span>
-                br
-                strong Location:
-                |  <span id='userInfoLocation'></span>
+                strong Stock 2:
+                |  <span id='Stock2'></span>
+
         // /USER INFO
 
         // USER LIST
-        h2 User List
-        #userList
+        h2 Account List
+        #accountList
             table
                 thead
-                    th UserName
-                    th Email
+                    th First Name
+                    th Last Name
+                    th Stock 1
+                    th Quantity 1
+                    th Stock 2
+                    th Quantity 2
                     th Delete?
+
                 tbody
         // /USER LIST
 
         // ADD USER
-        h2 Add User
-        #addUser
+        h2 Add Account & Stocks
+        #addAccount
             fieldset
-                input#inputUserName(type='text', placeholder='Username')
-                input#inputUserEmail(type='text', placeholder='Email')
+                input#firstName(type='text', placeholder='First Name')
+                input#lastName(type='text', placeholder='Last Name')
                 br
-                input#inputUserFullname(type='text', placeholder='Full Name')
-                input#inputUserAge(type='text', placeholder='Age')
+                input#Stock1(type='text', placeholder='Stock 1')
+                input#quantity1(type='text', placeholder='No. of Shares')
                 br
-                input#inputUserLocation(type='text', placeholder='Location')
-                input#inputUserGender(type='text', placeholder='gender')
+                input#Stock2(type='text', placeholder='Stock 2')
+                input#quantity2(type='text', placeholder='No. of Shares')
                 br
-                button#btnAddUser Add User
+                button#btnAddAccount Add Account
         // /ADD USER
 
     // /WRAPPER
