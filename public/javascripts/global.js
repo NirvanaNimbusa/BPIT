@@ -1,4 +1,6 @@
 // Userlist data array for filling in info box
+const chain = require('chain-sdk');
+
 var userListData = [];
 
 // DOM Ready =============================================================
@@ -10,7 +12,7 @@ $(document).ready(function() {
 });
 
 // Functions =============================================================
-const client = new chain.Client();
+
 
 // Fill table with data
 function populateTable() {
@@ -61,6 +63,9 @@ function showUserInfo(event) {
 
 };
 
+
+const chain = require('chain-sdk')
+
 function addAccount(event) {
     event.preventDefault();
 
@@ -85,6 +90,8 @@ function addAccount(event) {
 
         //_______________________CHAIN CODE______________________________
 
+        const client = new chain.Client();
+
         let _signer
 
         Promise.resolve().then(() => {
@@ -102,25 +109,17 @@ function addAccount(event) {
           _signer = signer
           return key
         }).then(key => {
-          // snippet create-asset
-          const goldPromise = client.assets.create({
-            alias: this.Stock1,
-            rootXpubs: [key.xpub],
-            quorum: 1
-          })
-          // endsnippet
 
           // snippet create-account-alice
           const alicePromise = client.accounts.create({
-            alias: this.firstName,
+            alias: names[i],
             rootXpubs: [key.xpub],
             quorum: 1
-          })
-            return Promise.all([goldPromise, alicePromise])
-        }).catch(err => 
-            process.nextTick(() => {throw err })
+            })
+        }).catch(err =>
+          process.nextTick(() => { throw err })
         )
-          // endsnippet
+
 
         //________________________________________________________________
 
