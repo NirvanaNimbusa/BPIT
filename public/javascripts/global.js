@@ -10,6 +10,7 @@ $(document).ready(function() {
 });
 
 // Functions =============================================================
+const client = new chain.Client();
 
 // Fill table with data
 function populateTable() {
@@ -84,7 +85,42 @@ function addAccount(event) {
 
         //_______________________CHAIN CODE______________________________
 
+        let _signer
 
+        Promise.resolve().then(() => {
+          // snippet create-key
+          const keyPromise = client.mockHsm.keys.create()
+          // endsnippet
+
+          return keyPromise
+        }).then(key => {
+          // snippet signer-add-key
+          const signer = new chain.HsmSigner()
+          signer.addKey(key.xpub, client.mockHsm.signerConnection)
+          // endsnippet
+
+          _signer = signer
+          return key
+        }).then(key => {
+          // snippet create-asset
+          const goldPromise = client.assets.create({
+            alias: this.Stock1,
+            rootXpubs: [key.xpub],
+            quorum: 1
+          })
+          // endsnippet
+
+          // snippet create-account-alice
+          const alicePromise = client.accounts.create({
+            alias: this.firstName,
+            rootXpubs: [key.xpub],
+            quorum: 1
+          })
+            return Promise.all([goldPromise, alicePromise])
+        }).catch(err => 
+            process.nextTick(() => {throw err })
+        )
+          // endsnippet
 
         //________________________________________________________________
 
