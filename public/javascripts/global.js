@@ -1,6 +1,4 @@
 // Userlist data array for filling in info box
-const chain = require('chain-sdk');
-
 var userListData = [];
 
 // DOM Ready =============================================================
@@ -12,7 +10,6 @@ $(document).ready(function() {
 });
 
 // Functions =============================================================
-
 
 // Fill table with data
 function populateTable() {
@@ -63,9 +60,6 @@ function showUserInfo(event) {
 
 };
 
-
-const chain = require('chain-sdk')
-
 function addAccount(event) {
     event.preventDefault();
 
@@ -88,38 +82,26 @@ function addAccount(event) {
             'quantity2': $('#addAccount fieldset input#quantity2').val()
         }
 
-        //_______________________CHAIN CODE______________________________
+        //_______________________CONNECTING TO Chain.js in Routes______________________________
 
-        const client = new chain.Client();
-
-        let _signer
-
-        Promise.resolve().then(() => {
-          // snippet create-key
-          const keyPromise = client.mockHsm.keys.create()
-          // endsnippet
-
-          return keyPromise
-        }).then(key => {
-          // snippet signer-add-key
-          const signer = new chain.HsmSigner()
-          signer.addKey(key.xpub, client.mockHsm.signerConnection)
-          // endsnippet
-
-          _signer = signer
-          return key
-        }).then(key => {
-
-          // snippet create-account-alice
-          const alicePromise = client.accounts.create({
-            alias: names[i],
-            rootXpubs: [key.xpub],
-            quorum: 1
-            })
-        }).catch(err =>
-          process.nextTick(() => { throw err })
-        )
-
+        $.ajax({
+            type: 'POST',
+            data: newUser,
+            url: '/chain/addAccount',
+            dataType: 'JSON'
+        }).done(function( response ) {
+            // Check for successful (blank) response
+            if (response.msg === '') {
+                // Clear the form inputs
+                $('#addAccount fieldset input').val('');
+                // Update the table
+                populateTable();
+            }
+            else {
+                // If something goes wrong, alert the error message that our service returned
+                alert('Error: ' + response.msg);
+            }
+        });
 
         //________________________________________________________________
 
