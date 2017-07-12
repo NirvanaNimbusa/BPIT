@@ -1,4 +1,4 @@
-const chain = require('chain-sdk');
+const chain2 = require('chain-sdk');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -11,7 +11,14 @@ var monk = require('monk');
 var db = monk('localhost:27017/nodetest2');
 
 var index = require('./routes/index');
+var chain = require('./routes/chain');
 var users = require('./routes/users');
+
+
+
+
+
+
 
 var app = express();
 
@@ -33,17 +40,27 @@ app.use(function(req,res,next){
 });
 
 app.use('/', index);
+app.use('/chain', chain);
 app.use('/users', users);
 
+
+
+
+console.log("here1!\n")
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+  console.log("ERRORR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
   var err = new Error('Not Found');
   err.status = 404;
-  next(err);
+  
+    console.log("Our error: ")
+    console.log(err)
+    next(err);
 });
 
 // error handler
 app.use(function(err, req, res, next) {
+    console.log("here3!\n")
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

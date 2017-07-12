@@ -1,15 +1,20 @@
+console.log("ENTERED USERS!!!!!!!!!!!!!!!!!!!!!!!!\n")
+
 var express = require('express');
 var router = express.Router();
 
 /* GET users listing. */
 router.get('/accountList', function(req, res) {
     var db = req.db;
+    console.log(db)
     var collection = db.get('newdb');
+    console.log(collection)
     collection.find({},{},function(e,docs){
         res.json(docs);
     });
 });
 router.post('/addAccount', function(req, res) {
+    console.log("ENTERED USERS- ADD ACCOUNT!!!!!!!!!!!!!!!!!!!!!!!!\n")
     var db = req.db;
     var collection = db.get('newdb');
     collection.insert(req.body, function(err, result){
@@ -28,3 +33,7 @@ router.delete('/deleteuser/:id', function(req, res) {
     });
 });
 module.exports = router;
+
+
+////
+

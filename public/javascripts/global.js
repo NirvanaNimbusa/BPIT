@@ -10,7 +10,7 @@ $(document).ready(function() {
 });
 
 // Functions =============================================================
-const client = new chain.Client();
+//const client = new chain.Client();
 
 // Fill table with data
 function populateTable() {
@@ -83,33 +83,7 @@ function addAccount(event) {
             'quantity2': $('#addAccount fieldset input#quantity2').val()
         }
 
-        //_______________________CHAIN CODE______________________________
 
-		$.ajax({
-            type: 'POST',
-            data: newUser,
-            url: '/chain/addAccount',
-            dataType: 'JSON'
-        }).done(function( response ) {
-
-            // Check for successful (blank) response
-            if (response.msg === '') {
-                // Clear the form inputs
-                $('#addAccount fieldset input').val('');
-
-                // Update the table
-                populateTable();
-
-            }
-            else {
-
-                // If something goes wrong, alert the error message that our service returned
-                alert('Error: ' + response.msg);
-
-            }
-        });
-
-        //________________________________________________________________
 
         // Use AJAX to post the object to our adduser service
         $.ajax({
@@ -135,6 +109,39 @@ function addAccount(event) {
 
             }
         });
+        
+        //_______________________CHAIN CODE______________________________
+        
+		$.ajax({
+            type: 'POST',
+            data: newUser,
+            url: '/chain/addAccount',
+            dataType: 'JSON'
+        }).done(function( response ) {
+            
+            // Check for successful (blank) response
+            if (response.msg === '') {
+                // Clear the form inputs
+                $('#addAccount fieldset input').val('');
+
+                // Update the table
+                populateTable();
+
+            }
+            else {
+
+                // If something goes wrong, alert the error message that our service returned
+                alert('Error: ' + response.msg);
+
+            }
+        });
+        console.log("global.js : chain code\n")
+
+        //________________________________________________________________
+        
+        
+
+        
     }
     else {
         // If errorCount is more than 0, error out
