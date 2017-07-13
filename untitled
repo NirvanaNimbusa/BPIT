@@ -1,0 +1,136 @@
+var express = require('express');
+var router = express.Router();
+const chain2 = require('chain-sdk')
+const client = new chain2.Client()
+
+let _signer
+
+router.post('/addAccount', function(req, res) {
+    console.log("ENTERED CHAIN - ADD ACCOUNT!!!!!!!!!!!!!!!!!!!!!!!!\n")
+  
+    Promise.resolve().then(() => {
+    // snippet create-key
+    const keyPromise = client.mockHsm.keys.create()
+    // endsnippet
+    return keyPromise
+    }).then(key => {
+    // snippet signer-add-key
+    const signer = new chain2.HsmSigner()
+    signer.addKey(key.xpub, client.mockHsm.signerConnection)
+    // endsnippet
+
+    _signer = signer
+    return key
+    }).then(key => {
+        
+        
+  // snippet create-asset
+    const goldPromise = client.assets.create({
+      alias: req.body.Stock1,
+      rootXpubs: [key.xpub],
+      quorum: 1,
+    })
+    // endsnippet
+    
+  // snippet create-asset
+    const silverPromise = client.assets.create({
+      alias: req.body.Stock2,
+      rootXpubs: [key.xpub],
+      quorum: 1,
+    })
+    // endsnippet
+    
+
+    // snippet create-account-alice
+    const alicePromise = client.accounts.create({
+      alias: req.body.firstName + " " + req.body.lastName,
+      rootXpubs: [key.xpub],
+      quorum: 1
+    })
+    // endsnippet
+
+    // snippet create-account-bob
+    const bobPromise = client.accounts.create({
+      alias: req.body.firstName + " " + req.body.lastName,
+      rootXpubs: [key.xpub],
+      quorum: 1
+    })
+    // endsnippet
+    
+    
+    
+    return Promise.all([goldPromise, alicePromise, bobPromise]);
+    res.send({msg:''});
+
+  }).then(assets => {
+  aliceDollar = assets[0]
+  bobBuck = assets[1]
+}).then(() =>
+  aliceCore.transactions.build(builder => {
+    builder.issue({ assetAlias: 'aliceDollar', amount: 1000 })
+    builder.controlWithAccount({
+      accountAlias: 'alice',
+      assetAlias: 'aliceDollar',
+      amount: 1000
+    })
+  }).then(issuance => aliceSigner.sign(issuance))
+    .then(signed => aliceCore.transactions.submit(signed))
+).then(() =>
+  bobCore.transactions.build(builder => {
+    builder.issue({ assetAlias: 'bobBuck', amount: 1000 })
+    builder.controlWithAccount({
+      accountAlias: 'bob',
+      assetAlias: 'bobBuck',
+      amount: 1000
+    })
+  }).then(issuance => bobSigner.sign(issuance))
+    .then(signed => bobCore.transactions.submit(signed))
+).then(() => {
+  if (aliceCore.baseUrl == bobCore.baseUrl){
+    const chain = aliceCore
+    const signer = aliceSigner
+    signer.addKey(bobKey, chain.mockHsm.signerConnection)
+
+    // SAME-CORE TRADE
+
+    // snippet same-core-trade
+    chain.transactions.build(builder => {
+      builder.spendFromAccount({
+        accountAlias: 'alice',
+        assetAlias: 'aliceDollar',
+        amount: 50
+      })
+      builder.controlWithAccount({
+        accountAlias: 'alice',
+        assetAlias: 'bobBuck',
+        amount: 100
+      })
+      builder.spendFromAccount({
+        accountAlias: 'bob',
+        assetAlias: 'bobBuck',
+        amount: 100
+      })
+      builder.controlWithAccount({
+        accountAlias: 'bob',
+        assetAlias: 'aliceDollar',
+        amount: 50
+      })
+    }).then(trade => signer.sign(trade))
+      .then(signed => chain.transactions.submit(signed))
+    // endsnippet
+
+  }}).catch(err =>
+    process.nextTick(() => {throw err }),
+    res.send({msg:err})
+  )});
+
+    /*var db = req.db;
+    var collection = db.get('newdb');
+    collection.insert(req.body, function(err, result){
+        res.send(
+            (err === null) ? { msg: '' } : { msg: err }
+        );
+    });*/
+
+
+module.exports = router;
