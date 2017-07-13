@@ -1,11 +1,11 @@
-const chain2 = require('chain-sdk');
+const chain = require('chain-sdk');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var googleStocks = require('google-stocks');
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/nodetest2');
@@ -13,8 +13,7 @@ var db = monk('localhost:27017/nodetest2');
 var index = require('./routes/index');
 var chain = require('./routes/chain');
 var users = require('./routes/users');
-
-
+var stocks = require('./routes/stocks')
 
 var app = express();
 
@@ -38,6 +37,7 @@ app.use(function(req,res,next){
 app.use('/', index);
 app.use('/chain', chain);
 app.use('/users', users);
+app.use('/stocks', stocks)
 
 
 // catch 404 and forward to error handler
@@ -53,7 +53,6 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-    console.log("here3!\n")
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

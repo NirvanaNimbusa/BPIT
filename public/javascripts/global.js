@@ -1,6 +1,5 @@
 // Userlist data array for filling in info box
 var userListData = [];
-var googleStocks = require('google-stocks');
 
 // DOM Ready =============================================================
 $(document).ready(function() {
@@ -62,6 +61,19 @@ function showUserInfo(event) {
 
 };
 
+// function getData(event) {
+//     event.preventDefault();
+
+//     console.log('hello');
+//     googleStocks([$('#addAccount fieldset input#Stock1').val()], function(error, data) {
+//       console.log('hi');
+//     });
+     
+//     googleStocks([$('#addAccount fieldset input#quantity2').val()], function(error, data) {
+//       console.log('hi');
+//     });
+// };
+
 function addAccount(event) {
     event.preventDefault();
 
@@ -83,15 +95,6 @@ function addAccount(event) {
             'Stock2': $('#addAccount fieldset input#Stock2').val(),
             'quantity2': $('#addAccount fieldset input#quantity2').val()
         }
-
-        googleStocks(['AAPL'], function(error, data) {
-            console.log(data);
-            });
-             
-        googleStocks(['NASDAQ:FB'], function(error, data) {
-            console.log(data);
-            });
-
 
         // Use AJAX to post the object to our adduser service
         $.ajax({
@@ -143,7 +146,15 @@ function addAccount(event) {
 
             }
         });
-        console.log("global.js : chain code\n")
+
+            console.log('hello');
+            googleStocks([$('#addAccount fieldset input#Stock1').val()], function(error, data) {
+              console.log('hi');
+            });
+             
+            googleStocks([$('#addAccount fieldset input#quantity2').val()], function(error, data) {
+            console.log('hi');
+        // console.log("global.js : chain code\n")
 
         //________________________________________________________________
         
@@ -156,6 +167,7 @@ function addAccount(event) {
         alert('Please fill in all fields');
         return false;
     }
+
 };
 function deleteUser(event) {
 
@@ -197,4 +209,4 @@ function deleteUser(event) {
 // Username link click
 $('#accountList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
 $('#btnAddAccount').on('click', addAccount);
- $('#accountList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+$('#accountList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);

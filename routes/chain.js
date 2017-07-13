@@ -1,12 +1,11 @@
 var express = require('express');
 var router = express.Router();
-const chain2 = require('chain-sdk')
-const client = new chain2.Client()
+const chain = require('chain-sdk')
+const client = new chain.Client()
 
 let _signer
 
 router.post('/addAccount', function(req, res) {
-    console.log("ENTERED CHAIN - ADD ACCOUNT!!!!!!!!!!!!!!\n")
     Promise.resolve().then(() => {
     // snippet create-key
     const keyPromise = client.mockHsm.keys.create()
@@ -14,7 +13,7 @@ router.post('/addAccount', function(req, res) {
     return keyPromise
     }).then(key => {
     // snippet signer-add-key
-    const signer = new chain2.HsmSigner()
+    const signer = new chain.HsmSigner()
     signer.addKey(key.xpub, client.mockHsm.signerConnection)
     // endsnippet
 
@@ -23,7 +22,7 @@ router.post('/addAccount', function(req, res) {
     }).then(key => {
   // snippet create-asset
     const goldPromise = client.assets.create({
-      alias: 'gold4',
+      alias: 'ho',
       rootXpubs: [key.xpub],
       quorum: 1,
     })
@@ -31,7 +30,7 @@ router.post('/addAccount', function(req, res) {
 
     // snippet create-account-alice
     const alicePromise = client.accounts.create({
-      alias: 'arohi',
+      alias: 'd',
       rootXpubs: [key.xpub],
       quorum: 1
     })
@@ -39,7 +38,7 @@ router.post('/addAccount', function(req, res) {
 
     // snippet create-account-bob
     const bobPromise = client.accounts.create({
-      alias: 'kevin',
+      alias: 'r',
       rootXpubs: [key.xpub],
       quorum: 1
     })
@@ -52,14 +51,6 @@ router.post('/addAccount', function(req, res) {
   process.nextTick(() => {throw err }),
   res.send({msg:err})
   )
-
-    /*var db = req.db;
-    var collection = db.get('newdb');
-    collection.insert(req.body, function(err, result){
-        res.send(
-            (err === null) ? { msg: '' } : { msg: err }
-        );
-    });*/
 });
 
 module.exports = router;
