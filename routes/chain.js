@@ -6,7 +6,6 @@ const client = new chain2.Client()
 let _signer
 
 router.post('/addAccount', function(req, res) {
-    console.log("ENTERED CHAIN - ADD ACCOUNT!!!!!!!!!!!!!!\n")
     Promise.resolve().then(() => {
     // snippet create-key
     const keyPromise = client.mockHsm.keys.create()
@@ -21,45 +20,74 @@ router.post('/addAccount', function(req, res) {
     _signer = signer
     return key
     }).then(key => {
-  // snippet create-asset
+  
+    // snippet create-asset: STOCK 1
     const goldPromise = client.assets.create({
-      alias: 'gold4',
+      alias: req.body.Stock1,
       rootXpubs: [key.xpub],
       quorum: 1,
     })
     // endsnippet
-
-    // snippet create-account-alice
-    const alicePromise = client.accounts.create({
-      alias: 'arohi',
+    
+    // snippet create-asset: STOCK 2
+    const silverPromise = client.assets.create({
+      alias: req.body.Stock2,
       rootXpubs: [key.xpub],
-      quorum: 1
+      quorum: 1,
     })
     // endsnippet
-
-    // snippet create-account-bob
-    const bobPromise = client.accounts.create({
-      alias: 'kevin',
+    
+    // snippet create-account-alice: FIRST & LAST NAME
+    const alicePromise = client.accounts.create({
+      alias: req.body.firstName + " " + req.body.lastName,
       rootXpubs: [key.xpub],
       quorum: 1
     })
     // endsnippet
     
-    return Promise.all([goldPromise, alicePromise, bobPromise]);
+    return Promise.all([goldPromise, silverPromise, alicePromise]);
     res.send({msg:''});
+    }).then( t => { 
+    
+    //TRANSACTIONS:
+    //Putting the first stock on the ledger
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: req.body.Stock1,
+            amount: parseInt(req.body.quantity1)
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.firstName + " " + req.body.lastName,
+            assetAlias: req.body.Stock1,
+            amount: parseInt(req.body.quantity1)
+        })
+    }).then(issuance => {
+        return _signer.sign(issuance)
+    }).then(signed => {
+        return client.transactions.submit(signed)
+    })  
+  }).then( v => { 
 
+    //Putting the second stock on the ledger 
+    client.transactions.build(builder => {
+        builder.issue({
+            assetAlias: req.body.Stock2,
+            amount: parseInt(req.body.quantity2)
+        })
+        builder.controlWithAccount({
+            accountAlias: req.body.firstName + " " + req.body.lastName,
+            assetAlias: req.body.Stock2,
+            amount: parseInt(req.body.quantity2)
+        })
+    }).then(issuance => {
+        return _signer.sign(issuance)
+    }).then(signed => {
+        return client.transactions.submit(signed)
+    })  
   }).catch(err =>
   process.nextTick(() => {throw err }),
   res.send({msg:err})
   )
-
-    /*var db = req.db;
-    var collection = db.get('newdb');
-    collection.insert(req.body, function(err, result){
-        res.send(
-            (err === null) ? { msg: '' } : { msg: err }
-        );
-    });*/
 });
 
 module.exports = router;

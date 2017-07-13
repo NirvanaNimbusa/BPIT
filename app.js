@@ -16,6 +16,10 @@ var users = require('./routes/users');
 
 
 
+
+
+
+
 var app = express();
 
 // view engine setup
@@ -40,9 +44,12 @@ app.use('/chain', chain);
 app.use('/users', users);
 
 
+
+
+console.log("here1!\n")
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  console.log("ERRORR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+  console.log("ERRORR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
   var err = new Error('Not Found');
   err.status = 404;
   

@@ -17,6 +17,8 @@ router.post('/addAccount', function(req, res) {
     console.log("ENTERED USERS- ADD ACCOUNT!!!!!!!!!!!!!!!!!!!!!!!!\n")
     var db = req.db;
     var collection = db.get('newdb');
+    console.log("DATA:!!!!!!!!!!!!!!!!!!!!!\n")
+    console.log(req.body)
     collection.insert(req.body, function(err, result){
         res.send(
             (err === null) ? { msg: '' } : { msg: err }
