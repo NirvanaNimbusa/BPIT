@@ -1,5 +1,6 @@
 // Userlist data array for filling in info box
 var userListData = [];
+var googleStocks = require('google-stocks');
 
 // DOM Ready =============================================================
 $(document).ready(function() {
@@ -83,6 +84,13 @@ function addAccount(event) {
             'quantity2': $('#addAccount fieldset input#quantity2').val()
         }
 
+        googleStocks(['AAPL'], function(error, data) {
+            console.log(data);
+            });
+             
+        googleStocks(['NASDAQ:FB'], function(error, data) {
+            console.log(data);
+            });
 
 
         // Use AJAX to post the object to our adduser service
