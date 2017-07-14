@@ -18,6 +18,7 @@
     "morgan": "~1.7.0",
     "request": "^2.81.0",
     "serve-favicon": "~2.4.2",
-    "uniq": "^1.0.1"
+    "uniq": "^1.0.1",
+    "yahoo-finance-quotes": "^1.0.3"
   }
 }

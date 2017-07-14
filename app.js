@@ -1,4 +1,4 @@
-const chain = require('chain-sdk');
+const chain2 = require('chain-sdk');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -14,10 +14,6 @@ var index = require('./routes/index');
 var chain = require('./routes/chain');
 var users = require('./routes/users');
 var stocks = require('./routes/stocks')
-
-
-
-
 
 var app = express();
 
@@ -41,7 +37,7 @@ app.use(function(req,res,next){
 app.use('/', index);
 app.use('/chain', chain);
 app.use('/users', users);
-app.use('/stocks', stocks)
+app.use('/stocks', stocks);
 
 
 

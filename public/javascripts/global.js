@@ -147,13 +147,37 @@ function addAccount(event) {
             }
         });
 
-            console.log('hello');
-            googleStocks([$('#addAccount fieldset input#Stock1').val()], function(error, data) {
-              console.log('hi');
-            });
+         $.ajax({
+            type: 'POST',
+            data: newUser,
+            url: '/stocks/addStock',
+            dataType: 'JSON'
+        }).done(function( response ) {
+
+            // Check for successful (blank) response
+            if (response.msg === '') {
+                // Clear the form inputs
+                $('#addAccount fieldset input').val('');
+
+                // Update the table
+                populateTable();
+
+            }
+            else {
+
+                // If something goes wrong, alert the error message that our service returned
+                alert('Error: ' + response.msg);
+
+            }
+        });
+
+            // console.log('hello');
+            // googleStocks([$('#addAccount fieldset input#Stock1').val()], function(error, data) {
+            //   console.log('hi');
+            // });
              
-            googleStocks([$('#addAccount fieldset input#quantity2').val()], function(error, data) {
-            console.log('hi');
+            // googleStocks([$('#addAccount fieldset input#quantity2').val()], function(error, data) {
+            // console.log('hi');
         // console.log("global.js : chain code\n")
 
         //________________________________________________________________

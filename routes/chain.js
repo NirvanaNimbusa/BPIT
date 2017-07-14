@@ -88,5 +88,3 @@ router.post('/addAccount', function(req, res) {
   res.send({msg:err})
   )
 });
-
-module.exports = router;
