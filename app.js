@@ -34,10 +34,11 @@ app.use(function(req,res,next){
     next();
 });
 
-app.use('/', index);
 app.use('/chain', chain);
-app.use('/users', users);
 app.use('/stocks', stocks);
+
+app.use('/users', users);
+app.use('/', index);
 
 
 
@@ -48,7 +49,7 @@ app.use(function(req, res, next) {
   console.log("ERRORR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
   var err = new Error('Not Found');
   err.status = 404;
-  
+
     console.log("Our error: ")
     console.log(err)
     next(err);
