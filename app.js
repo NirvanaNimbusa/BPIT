@@ -13,7 +13,8 @@ var db = monk('localhost:27017/nodetest2');
 var index = require('./routes/index');
 var chain = require('./routes/chain');
 var users = require('./routes/users');
-var stocks = require('./routes/stocks')
+var stocks = require('./routes/stocks');
+var upload = require('./routes/upload');
 
 var app = express();
 
